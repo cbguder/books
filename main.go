@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/jedib0t/go-pretty/v6/text"
 	"log"
 	"os"
 
 	"github.com/cbguder/books/overdrive"
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
 )
 
 func main() {
