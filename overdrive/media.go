@@ -9,17 +9,17 @@ import (
 )
 
 type MediaResponse struct {
-	Items []Item `json:"items"`
+	Items []MediaItem `json:"items"`
 }
 
-type Item struct {
+type MediaItem struct {
 	EstimatedWaitDays int        `json:"estimatedWaitDays"`
 	FirstCreatorName  string     `json:"firstCreatorName"`
 	IsAvailable       bool       `json:"isAvailable"`
 	Languages         []Language `json:"languages"`
 	PublishDate       time.Time  `json:"publishDate"`
 	Title             string     `json:"title"`
-	Type              Type       `json:"type"`
+	Type              MediaType  `json:"type"`
 }
 
 type Language struct {
@@ -27,7 +27,7 @@ type Language struct {
 	Id   string `json:"id"`
 }
 
-type Type struct {
+type MediaType struct {
 	Name string `json:"name"`
 	Id   string `json:"id"`
 }
@@ -51,7 +51,7 @@ func mediaQueryRequest(ctx context.Context, library, query string) (*http.Reques
 	vls.Set("page", "1")
 	vls.Set("x-client-id", "dewey")
 
-	loc := fmt.Sprintf("%s/libraries/%s/media", baseUrl, library)
+	loc := fmt.Sprintf("%s/libraries/%s/media", thunder, library)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", loc, nil)
 	if err != nil {

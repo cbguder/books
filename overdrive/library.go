@@ -36,6 +36,6 @@ func librariesByWebsiteIdRequest(ctx context.Context, websiteIds []int) (*http.R
 
 	websiteIdsStr := strings.Join(websiteIdStrs, ",")
 
-	loc := baseUrl + "/libraries?websiteIds=" + websiteIdsStr
+	loc := thunder + "/libraries?websiteIds=" + websiteIdsStr
 	return http.NewRequestWithContext(ctx, "GET", loc, nil)
 }

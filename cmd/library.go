@@ -22,7 +22,7 @@ func init() {
 	rootCmd.AddCommand(libraryCmd)
 }
 
-func library(cmd *cobra.Command, args []string) error {
+func library(_ *cobra.Command, args []string) error {
 	libbyClient := libby.NewClient()
 	acResp, err := libbyClient.Autocomplete(context.Background(), args[0])
 	if err != nil {
