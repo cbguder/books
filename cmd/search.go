@@ -2,11 +2,8 @@ package cmd
 
 import (
 	"context"
-	"os"
-
 	"github.com/cbguder/books/overdrive"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
 )
 
@@ -36,13 +33,7 @@ func search(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
-
-	style := table.StyleRounded
-	style.Format.Header = text.FormatDefault
-	t.SetStyle(style)
-
+	t := newTableWriter()
 	t.AppendHeader(table.Row{"Author", "Title", "Year", "Type", "Language", "Available", "Est. Wait"})
 
 	for _, item := range resp.Items {
