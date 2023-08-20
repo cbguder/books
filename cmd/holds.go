@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 
-	"github.com/cbguder/books/overdrive"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
@@ -21,9 +20,7 @@ func init() {
 }
 
 func holds(_ *cobra.Command, _ []string) error {
-	client := overdrive.NewClient()
-
-	resp, err := client.ChipSync(context.Background())
+	resp, err := sync(context.Background())
 	if err != nil {
 		return err
 	}

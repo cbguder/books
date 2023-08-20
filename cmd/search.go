@@ -30,7 +30,7 @@ func search(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	client := overdrive.NewClient()
+	client := overdrive.NewClient(cfg.Identity)
 	resp, err := client.GetMedia(context.Background(), library, args[0])
 	if err != nil {
 		return err

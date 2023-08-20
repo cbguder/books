@@ -34,19 +34,25 @@ func clone(_ *cobra.Command, _ []string) error {
 		return fmt.Errorf("setup code must be 8 digits")
 	}
 
-	client := overdrive.NewClient()
+	client := overdrive.NewClient("")
+	ctx := context.Background()
 
-	_, err = client.Chip(context.Background())
+	_, err = client.Chip(ctx)
 	if err != nil {
 		return err
 	}
 
-	_, err = client.ChipClone(context.Background(), code)
+	_, err = client.ChipClone(ctx, code)
 	if err != nil {
 		return err
 	}
 
-	_, err = client.Chip(context.Background())
+	_, err = client.Chip(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = sync(ctx)
 	if err != nil {
 		return err
 	}

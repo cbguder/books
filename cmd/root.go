@@ -4,11 +4,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cbguder/books/config"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var cfgFile string
+var cfg *config.Config
 
 var rootCmd = &cobra.Command{
 	Use: "books",
@@ -31,6 +32,5 @@ func initConfig() {
 		cfgFile = filepath.Join(home, ".books.yml")
 	}
 
-	viper.SetConfigFile(cfgFile)
-	viper.ReadInConfig()
+	cfg, _ = config.ReadConfig(cfgFile)
 }

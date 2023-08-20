@@ -7,16 +7,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/spf13/viper"
 )
 
 const thunder = "https://thunder.api.overdrive.com/v2"
 const sentry = "https://sentry-read.svc.overdrive.com"
 
-func NewClient() *Client {
+func NewClient(identity string) *Client {
 	return &Client{
-		identity: viper.GetString("identity"),
+		identity: identity,
 	}
 }
 
@@ -65,11 +63,4 @@ func (c *Client) request(ctx context.Context, method, url string, body any) (*ht
 	}
 
 	return req, nil
-}
-
-func (c *Client) setIdentity(identity string) error {
-	c.identity = identity
-
-	viper.Set("identity", identity)
-	return viper.WriteConfig()
 }

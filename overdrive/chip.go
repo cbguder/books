@@ -23,9 +23,21 @@ type CloneResponse struct {
 
 type SyncResponse struct {
 	Result   string `json:"result"`
+	Cards    []Card `json:"cards"`
 	Loans    []Loan `json:"loans"`
 	Holds    []Hold `json:"holds"`
 	Identity string `json:"identity"`
+}
+
+type Card struct {
+	CardId       string      `json:"cardId"`
+	CardName     string      `json:"cardName"`
+	Library      CardLibrary `json:"library"`
+	AdvantageKey string      `json:"advantageKey"`
+}
+
+type CardLibrary struct {
+	Name string `json:"name"`
 }
 
 type Loan struct {
@@ -56,8 +68,9 @@ func (c *Client) Chip(ctx context.Context) (*ChipResponse, error) {
 		return nil, err
 	}
 
-	err = c.setIdentity(resp.Identity)
-	return &resp, err
+	c.identity = resp.Identity
+
+	return &resp, nil
 }
 
 func (c *Client) ChipClone(ctx context.Context, code string) (*CloneResponse, error) {
@@ -91,6 +104,7 @@ func (c *Client) ChipSync(ctx context.Context) (*SyncResponse, error) {
 		return nil, err
 	}
 
-	err = c.setIdentity(resp.Identity)
-	return &resp, err
+	c.identity = resp.Identity
+
+	return &resp, nil
 }

@@ -31,7 +31,7 @@ func library(_ *cobra.Command, args []string) error {
 
 	websiteIds := uniqueWebsiteIds(acResp)
 
-	odClient := overdrive.NewClient()
+	odClient := overdrive.NewClient(cfg.Identity)
 	libResp, err := odClient.GetLibrariesByWebsiteId(context.Background(), websiteIds)
 	if err != nil {
 		return err
