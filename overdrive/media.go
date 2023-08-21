@@ -8,6 +8,31 @@ import (
 	"time"
 )
 
+const audiobookFormats = "audiobook-overdrive,audiobook-overdrive-provisional"
+const ebookFormats = "ebook-overdrive,ebook-media-do,ebook-overdrive-provisional"
+const magazineFormats = "magazine-overdrive"
+const allFormats = ebookFormats + "," + audiobookFormats + "," + magazineFormats
+
+type MediaFormat int
+
+const (
+	MediaFormatAny MediaFormat = iota
+	MediaFormatAudiobook
+	MediaFormatEbook
+)
+
+func (f MediaFormat) queryValue() string {
+	if f == MediaFormatAudiobook {
+		return audiobookFormats
+	}
+
+	if f == MediaFormatEbook {
+		return ebookFormats
+	}
+
+	return allFormats
+}
+
 type MediaResponse struct {
 	Items []MediaItem `json:"items"`
 }
@@ -33,8 +58,8 @@ type MediaType struct {
 	Id   string `json:"id"`
 }
 
-func (c *Client) GetMedia(ctx context.Context, library, query string) (*MediaResponse, error) {
-	req, err := mediaQueryRequest(ctx, library, query)
+func (c *Client) GetMedia(ctx context.Context, library, query string, format MediaFormat) (*MediaResponse, error) {
+	req, err := mediaQueryRequest(ctx, library, query, format)
 	if err != nil {
 		return nil, err
 	}
@@ -44,10 +69,10 @@ func (c *Client) GetMedia(ctx context.Context, library, query string) (*MediaRes
 	return &resp, err
 }
 
-func mediaQueryRequest(ctx context.Context, library, query string) (*http.Request, error) {
+func mediaQueryRequest(ctx context.Context, library, query string, format MediaFormat) (*http.Request, error) {
 	vls := url.Values{}
 	vls.Set("query", query)
-	vls.Set("format", "ebook-overdrive,ebook-media-do,ebook-overdrive-provisional,audiobook-overdrive,audiobook-overdrive-provisional,magazine-overdrive")
+	vls.Set("format", format.queryValue())
 	vls.Set("perPage", "24")
 	vls.Set("page", "1")
 	vls.Set("x-client-id", "dewey")

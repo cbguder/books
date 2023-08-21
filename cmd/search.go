@@ -20,18 +20,24 @@ func init() {
 	rootCmd.AddCommand(searchCmd)
 
 	searchCmd.Flags().StringP("library", "l", "", "Library code (e.g. sfpl)")
+	searchCmd.Flags().StringP("format", "f", "", "Media format (audiobook or ebook)")
 }
 
 func search(cmd *cobra.Command, args []string) error {
 	client := overdrive.NewClient(cfg.Identity)
 
-	libraryFlag, err := cmd.Flags().GetString("library")
-	if err != nil {
-		return err
+	libraryFlag, _ := cmd.Flags().GetString("library")
+
+	format := overdrive.MediaFormatAny
+	formatFlag, _ := cmd.Flags().GetString("format")
+	if formatFlag == "audiobook" {
+		format = overdrive.MediaFormatAudiobook
+	} else if formatFlag == "ebook" {
+		format = overdrive.MediaFormatEbook
 	}
 
 	if libraryFlag != "" {
-		return searchSingleLibrary(client, "", libraryFlag, args[0])
+		return searchSingleLibrary(client, "", libraryFlag, args[0], format)
 	}
 
 	if len(cfg.Cards) == 0 {
@@ -39,7 +45,7 @@ func search(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, card := range cfg.Cards {
-		err = searchSingleLibrary(client, card.LibraryName, card.LibraryKey, args[0])
+		err := searchSingleLibrary(client, card.LibraryName, card.LibraryKey, args[0], format)
 		if err != nil {
 			return err
 		}
@@ -48,8 +54,8 @@ func search(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query string) error {
-	resp, err := client.GetMedia(context.Background(), libraryKey, query)
+func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query string, format overdrive.MediaFormat) error {
+	resp, err := client.GetMedia(context.Background(), libraryKey, query, format)
 	if err != nil {
 		return err
 	}
