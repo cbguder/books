@@ -23,10 +23,11 @@ func loans(_ *cobra.Command, _ []string) error {
 	}
 
 	t := newTableWriter()
-	t.AppendHeader(table.Row{"Author", "Title", "Type", "Checkout Date", "Due Date"})
+	t.AppendHeader(table.Row{"ID", "Author", "Title", "Type", "Checkout Date", "Due Date"})
 
 	for _, loan := range resp.Loans {
 		t.AppendRow(table.Row{
+			loan.Id,
 			loan.FirstCreatorName,
 			loan.Title,
 			loan.Type.Name,

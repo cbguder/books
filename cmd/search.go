@@ -60,10 +60,11 @@ func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query stri
 		t.SetTitle(title)
 	}
 
-	t.AppendHeader(table.Row{"Author", "Title", "Year", "Type", "Language", "Available", "Est. Wait"})
+	t.AppendHeader(table.Row{"ID", "Author", "Title", "Year", "Type", "Language", "Available", "Est. Wait"})
 
 	for _, item := range resp.Items {
 		t.AppendRow(table.Row{
+			item.Id,
 			item.FirstCreatorName,
 			item.Title,
 			item.PublishDate.Year(),

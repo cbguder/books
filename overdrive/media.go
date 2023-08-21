@@ -15,6 +15,7 @@ type MediaResponse struct {
 type MediaItem struct {
 	EstimatedWaitDays int        `json:"estimatedWaitDays"`
 	FirstCreatorName  string     `json:"firstCreatorName"`
+	Id                string     `json:"id"`
 	IsAvailable       bool       `json:"isAvailable"`
 	Languages         []Language `json:"languages"`
 	PublishDate       time.Time  `json:"publishDate"`

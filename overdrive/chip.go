@@ -44,6 +44,7 @@ type Loan struct {
 	CheckoutDate     time.Time `json:"checkoutDate"`
 	ExpireDate       time.Time `json:"expireDate"`
 	FirstCreatorName string    `json:"firstCreatorName"`
+	Id               string    `json:"id"`
 	Title            string    `json:"title"`
 	Type             MediaType `json:"type"`
 }
