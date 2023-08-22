@@ -37,10 +37,15 @@ type Card struct {
 }
 
 type CardLibrary struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
+	WebsiteId string `json:"websiteId"`
+	Logo      struct {
+		Url string `json:"url"`
+	} `json:"logo"`
 }
 
 type Loan struct {
+	CardId           string    `json:"cardId"`
 	CheckoutDate     time.Time `json:"checkoutDate"`
 	ExpireDate       time.Time `json:"expireDate"`
 	FirstCreatorName string    `json:"firstCreatorName"`

@@ -12,10 +12,16 @@ type Config struct {
 }
 
 type Card struct {
-	Id          string `yaml:"id"`
-	Name        string `yaml:"name"`
-	LibraryName string `yaml:"library_name"`
-	LibraryKey  string `yaml:"library_key"`
+	Id      string  `yaml:"id"`
+	Name    string  `yaml:"name"`
+	Library Library `yaml:"library"`
+}
+
+type Library struct {
+	Name      string `yaml:"name"`
+	Key       string `yaml:"key"`
+	WebsiteId string `yaml:"website_id"`
+	LogoUrl   string `yaml:"logo_url"`
 }
 
 func ReadConfig(filename string) (*Config, error) {

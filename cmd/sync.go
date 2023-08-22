@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/cbguder/books/config"
 	"github.com/cbguder/books/overdrive"
 	"github.com/spf13/cobra"
@@ -25,6 +27,7 @@ func syncE(_ *cobra.Command, _ []string) error {
 func sync(ctx context.Context) (*overdrive.SyncResponse, error) {
 	client := overdrive.NewClient(cfg.Identity)
 
+	fmt.Println("Syncing...")
 	resp, err := client.ChipSync(ctx)
 	if err != nil {
 		return nil, err
@@ -42,10 +45,14 @@ func mapCards(cards []overdrive.Card) []config.Card {
 
 	for i, card := range cards {
 		cfgCards[i] = config.Card{
-			Id:          card.CardId,
-			Name:        card.CardName,
-			LibraryName: card.Library.Name,
-			LibraryKey:  card.AdvantageKey,
+			Id:   card.CardId,
+			Name: card.CardName,
+			Library: config.Library{
+				Name:      card.Library.Name,
+				Key:       card.AdvantageKey,
+				WebsiteId: card.Library.WebsiteId,
+				LogoUrl:   card.Library.Logo.Url,
+			},
 		}
 	}
 	return cfgCards

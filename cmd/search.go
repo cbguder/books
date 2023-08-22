@@ -45,7 +45,7 @@ func search(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, card := range cfg.Cards {
-		err := searchSingleLibrary(client, card.LibraryName, card.LibraryKey, args[0], format)
+		err := searchSingleLibrary(client, card.Library.Name, card.Library.Key, args[0], format)
 		if err != nil {
 			return err
 		}
