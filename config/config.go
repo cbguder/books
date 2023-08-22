@@ -18,10 +18,8 @@ type Card struct {
 }
 
 type Library struct {
-	Name      string `yaml:"name"`
-	Key       string `yaml:"key"`
-	WebsiteId string `yaml:"website_id"`
-	LogoUrl   string `yaml:"logo_url"`
+	Name string `yaml:"name"`
+	Key  string `yaml:"key"`
 }
 
 func ReadConfig(filename string) (*Config, error) {

@@ -48,10 +48,8 @@ func mapCards(cards []overdrive.Card) []config.Card {
 			Id:   card.CardId,
 			Name: card.CardName,
 			Library: config.Library{
-				Name:      card.Library.Name,
-				Key:       card.AdvantageKey,
-				WebsiteId: card.Library.WebsiteId,
-				LogoUrl:   card.Library.Logo.Url,
+				Name: card.Library.Name,
+				Key:  card.AdvantageKey,
 			},
 		}
 	}
