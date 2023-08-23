@@ -34,8 +34,8 @@ func download(_ *cobra.Command, args []string) error {
 	client := overdrive.NewClient(cfg.Identity)
 	ctx := context.Background()
 
-	fmt.Println("Opening audiobook...")
-	bookResp, err := client.OpenAudiobook(ctx, loan.CardId, mediaId)
+	fmt.Println("Opening book...")
+	bookResp, err := client.OpenBook(ctx, loan.CardId, mediaId, loan.Type.Id)
 	if err != nil {
 		return err
 	}

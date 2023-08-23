@@ -23,7 +23,7 @@ type ReportingContext struct {
 	Environment    string `json:"environment"`
 }
 
-type OpenAudiobookResponse struct {
+type OpenBookResponse struct {
 	Urls struct {
 		Web        string `json:"web"`
 		Openbook   string `json:"openbook"`
@@ -61,14 +61,13 @@ func (c *Client) DeleteLoan(ctx context.Context, cardId, mediaId string) error {
 	return c.do(req, nil)
 }
 
-func (c *Client) OpenAudiobook(ctx context.Context, cardId, mediaId string) (*OpenAudiobookResponse, error) {
-	loc := fmt.Sprintf("%s/open/audiobook/card/%s/title/%s", sentry, cardId, mediaId)
-	req, err := c.request(ctx, "GET", loc, nil)
+func (c *Client) OpenBook(ctx context.Context, cardId, mediaId, mediaTypeId string) (*OpenBookResponse, error) {
+	req, err := c.openBookRequest(ctx, cardId, mediaId, mediaTypeId)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := OpenAudiobookResponse{}
+	resp := OpenBookResponse{}
 	err = c.do(req, &resp)
 	return &resp, err
 }
@@ -123,4 +122,15 @@ func (c *Client) createLoanRequest(ctx context.Context, cardId, mediaId, format 
 	loc := fmt.Sprintf("%s/card/%s/loan/%s", sentry, cardId, mediaId)
 
 	return c.request(ctx, "POST", loc, body)
+}
+
+func (c *Client) openBookRequest(ctx context.Context, cardId string, mediaId string, mediaTypeId string) (*http.Request, error) {
+	var loc string
+	if mediaTypeId == "ebook" {
+		loc = fmt.Sprintf("%s/open/book/card/%s/title/%s", sentry, cardId, mediaId)
+	} else {
+		loc = fmt.Sprintf("%s/open/%s/card/%s/title/%s", sentry, mediaTypeId, cardId, mediaId)
+	}
+
+	return c.request(ctx, "GET", loc, nil)
 }
