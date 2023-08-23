@@ -28,16 +28,16 @@ func search(cmd *cobra.Command, args []string) error {
 
 	libraryFlag, _ := cmd.Flags().GetString("library")
 
-	format := overdrive.MediaFormatAny
 	formatFlag, _ := cmd.Flags().GetString("format")
-	if formatFlag == "audiobook" {
-		format = overdrive.MediaFormatAudiobook
-	} else if formatFlag == "ebook" {
-		format = overdrive.MediaFormatEbook
-	}
+	format := formatFromFlag(formatFlag)
 
 	if libraryFlag != "" {
 		return searchSingleLibrary(client, "", libraryFlag, args[0], format)
+	}
+
+	if len(cfg.Cards) == 1 {
+		card := cfg.Cards[0]
+		return searchSingleLibrary(client, "", card.Library.Key, args[0], format)
 	}
 
 	if len(cfg.Cards) == 0 {
@@ -54,6 +54,16 @@ func search(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+func formatFromFlag(formatFlag string) overdrive.MediaFormat {
+	if formatFlag == "audiobook" {
+		return overdrive.MediaFormatAudiobook
+	} else if formatFlag == "ebook" {
+		return overdrive.MediaFormatEbook
+	}
+
+	return overdrive.MediaFormatAny
+}
+
 func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query string, format overdrive.MediaFormat) error {
 	resp, err := client.GetMedia(context.Background(), libraryKey, query, format)
 	if err != nil {
@@ -66,7 +76,7 @@ func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query stri
 		t.SetTitle(title)
 	}
 
-	t.AppendHeader(table.Row{"ID", "Author", "Title", "Year", "Type", "Language", "Available", "Est. Wait"})
+	t.AppendHeader(table.Row{"ID", "Author", "Title", "Year", "Type", "Language", "Availability"})
 
 	for _, item := range resp.Items {
 		t.AppendRow(table.Row{
@@ -76,12 +86,23 @@ func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query stri
 			item.PublishDate.Year(),
 			item.Type.Name,
 			item.Languages[0].Name,
-			item.IsAvailable,
-			item.EstimatedWaitDays,
+			availabilityStr(item.IsAvailable, item.EstimatedWaitDays),
 		})
 	}
 
 	t.Render()
 
 	return nil
+}
+
+func availabilityStr(available bool, estWait int) string {
+	if available {
+		return "Available"
+	}
+
+	if estWait == 0 {
+		return "Unknown wait"
+	}
+
+	return fmt.Sprintf("%d day wait", estWait)
 }
