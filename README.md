@@ -68,3 +68,7 @@ Syncing...
 ## Caveats
 
 Only supports borrowing audiobooks at the moment.
+
+## See Also
+
+- [ping/odmpy](https://github.com/ping/odmpy) is a full-featured alternative written in Python
