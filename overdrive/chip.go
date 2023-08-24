@@ -30,18 +30,17 @@ type SyncResponse struct {
 }
 
 type Card struct {
-	CardId       string      `json:"cardId"`
-	CardName     string      `json:"cardName"`
-	Library      CardLibrary `json:"library"`
-	AdvantageKey string      `json:"advantageKey"`
-}
+	CardId       string `json:"cardId"`
+	CardName     string `json:"cardName"`
+	AdvantageKey string `json:"advantageKey"`
 
-type CardLibrary struct {
-	Name      string `json:"name"`
-	WebsiteId string `json:"websiteId"`
-	Logo      struct {
-		Url string `json:"url"`
-	} `json:"logo"`
+	Library struct {
+		Name      string `json:"name"`
+		WebsiteId string `json:"websiteId"`
+		Logo      struct {
+			Url string `json:"url"`
+		} `json:"logo"`
+	} `json:"library"`
 }
 
 type Loan struct {

@@ -35,7 +35,7 @@ func download(_ *cobra.Command, args []string) error {
 	ctx := context.Background()
 
 	fmt.Println("Opening book...")
-	bookResp, err := client.OpenBook(ctx, loan.CardId, mediaId, loan.Type.Id)
+	bookResp, err := client.OpenLoan(ctx, loan.CardId, mediaId, loan.Type.Id)
 	if err != nil {
 		return err
 	}

@@ -7,23 +7,13 @@ import (
 )
 
 type CreateLoanRequest struct {
-	Period           int              `json:"period"`
-	Units            string           `json:"units"`
-	LuckyDay         interface{}      `json:"luckyDay"`
-	TitleFormat      string           `json:"title_format"`
-	ReportingContext ReportingContext `json:"reporting_context"`
+	Period      int         `json:"period"`
+	Units       string      `json:"units"`
+	LuckyDay    interface{} `json:"luckyDay"`
+	TitleFormat string      `json:"title_format"`
 }
 
-type ReportingContext struct {
-	ListSourceName string `json:"listSourceName"`
-	ListSourceId   string `json:"listSourceId"`
-	ListPath       string `json:"listPath"`
-	ClientName     string `json:"clientName"`
-	ClientVersion  string `json:"clientVersion"`
-	Environment    string `json:"environment"`
-}
-
-type OpenBookResponse struct {
+type OpenLoanResponse struct {
 	Urls struct {
 		Web        string `json:"web"`
 		Openbook   string `json:"openbook"`
@@ -61,13 +51,13 @@ func (c *Client) DeleteLoan(ctx context.Context, cardId, mediaId string) error {
 	return c.do(req, nil)
 }
 
-func (c *Client) OpenBook(ctx context.Context, cardId, mediaId, mediaTypeId string) (*OpenBookResponse, error) {
+func (c *Client) OpenLoan(ctx context.Context, cardId, mediaId, mediaTypeId string) (*OpenLoanResponse, error) {
 	req, err := c.openBookRequest(ctx, cardId, mediaId, mediaTypeId)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := OpenBookResponse{}
+	resp := OpenLoanResponse{}
 	err = c.do(req, &resp)
 	return &resp, err
 }
@@ -109,14 +99,6 @@ func (c *Client) createLoanRequest(ctx context.Context, cardId, mediaId, format 
 		Units:       "day",
 		LuckyDay:    nil,
 		TitleFormat: format,
-		ReportingContext: ReportingContext{
-			ListSourceName: "similar",
-			ListSourceId:   mediaId,
-			ListPath:       "library/sfpl/similar-" + mediaId,
-			ClientName:     "Dewey",
-			ClientVersion:  "15.2.1",
-			Environment:    "charlie",
-		},
 	}
 
 	loc := fmt.Sprintf("%s/card/%s/loan/%s", sentry, cardId, mediaId)

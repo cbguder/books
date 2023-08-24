@@ -24,9 +24,7 @@ const (
 func (f MediaFormat) queryValue() string {
 	if f == MediaFormatAudiobook {
 		return audiobookFormats
-	}
-
-	if f == MediaFormatEbook {
+	} else if f == MediaFormatEbook {
 		return ebookFormats
 	}
 
@@ -34,23 +32,21 @@ func (f MediaFormat) queryValue() string {
 }
 
 type MediaResponse struct {
-	Items []MediaItem `json:"items"`
-}
+	Items []struct {
+		Id    string    `json:"id"`
+		Title string    `json:"title"`
+		Type  MediaType `json:"type"`
 
-type MediaItem struct {
-	EstimatedWaitDays int        `json:"estimatedWaitDays"`
-	FirstCreatorName  string     `json:"firstCreatorName"`
-	Id                string     `json:"id"`
-	IsAvailable       bool       `json:"isAvailable"`
-	Languages         []Language `json:"languages"`
-	PublishDate       time.Time  `json:"publishDate"`
-	Title             string     `json:"title"`
-	Type              MediaType  `json:"type"`
-}
+		EstimatedWaitDays int       `json:"estimatedWaitDays"`
+		FirstCreatorName  string    `json:"firstCreatorName"`
+		IsAvailable       bool      `json:"isAvailable"`
+		PublishDate       time.Time `json:"publishDate"`
 
-type Language struct {
-	Name string `json:"name"`
-	Id   string `json:"id"`
+		Languages []struct {
+			Name string `json:"name"`
+			Id   string `json:"id"`
+		} `json:"languages"`
+	} `json:"items"`
 }
 
 type MediaType struct {

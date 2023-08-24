@@ -8,13 +8,11 @@ import (
 )
 
 type LibrariesResponse struct {
-	Items []Library `json:"items"`
-}
-
-type Library struct {
-	Id           string `json:"id"`
-	Name         string `json:"name"`
-	PreferredKey string `json:"preferredKey"`
+	Items []struct {
+		Id           string `json:"id"`
+		Name         string `json:"name"`
+		PreferredKey string `json:"preferredKey"`
+	} `json:"items"`
 }
 
 func (c *Client) GetLibrariesByWebsiteId(ctx context.Context, websiteIds []int) (*LibrariesResponse, error) {
