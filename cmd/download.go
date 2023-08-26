@@ -89,7 +89,7 @@ func filenameFromUrl(entryUrl string) (string, error) {
 		return "", err
 	}
 
-	return filepath.Base(u.Path), nil
+	return u.Path, nil
 }
 
 func downloadToFile(ctx context.Context, client *overdrive.Client, destFolder, srcUrl string) error {
@@ -99,6 +99,12 @@ func downloadToFile(ctx context.Context, client *overdrive.Client, destFolder, s
 	}
 
 	fpath := filepath.Join(destFolder, fname)
+
+	parentDir := filepath.Dir(fpath)
+	err = os.MkdirAll(parentDir, 0755)
+	if err != nil {
+		return err
+	}
 
 	f, err := os.Create(fpath)
 	if err != nil {

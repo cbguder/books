@@ -17,6 +17,7 @@ Available Commands:
   holds       Show current holds
   library     Search for a library
   loans       Show current loans
+  repackage   repackage an ebook into an epub
   return      Return a loaned item
   search      Search for media
   sync        Sync data manually
