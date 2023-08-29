@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: stable
+
+      - name: Build
+        run: scripts/build.sh
+
+      - name: Create draft release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require("fs").promises;
+            const { repo: { owner, repo }, ref } = context;
+            const tag_name = ref.replace("refs/tags/", "");
+
+            const release = await github.rest.repos.createRelease({
+              owner, repo, tag_name, draft: true,
+            });
+
+            const files = await fs.readdir("./release");
+            for (const file of files) {
+              console.log("Uploading", file);
+              const data = await fs.readFile("./release/" + file);
+              await github.rest.repos.uploadReleaseAsset({
+                owner, repo, data,
+                release_id: release.data.id,
+                name: file,
+              });
+            }
