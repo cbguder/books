@@ -11,7 +11,7 @@ import (
 
 var repackageCmd = &cobra.Command{
 	Use:   "repackage <path>",
-	Short: "repackage an ebook into an epub",
+	Short: "repackage a book into an epub or MP3",
 	Args:  cobra.ExactArgs(1),
 	RunE:  repackageE,
 }
@@ -33,7 +33,9 @@ func repackageE(_ *cobra.Command, args []string) error {
 	baseName := fmt.Sprintf("%s - %s", openbook.Creator[0].Name, openbook.Title.Main)
 
 	if openbook.RenditionFormat == "ebook" {
-		return repackage.Ebook(srcDir, baseName+".epub")
+		return repackage.Ebook(srcDir, baseName+".epub", openbook)
+	} else if openbook.RenditionFormat == "audiobook" {
+		return repackage.Audiobook(srcDir, baseName+".mp3", openbook)
 	}
 
 	return fmt.Errorf("unknown format: %s", openbook.RenditionFormat)

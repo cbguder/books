@@ -17,7 +17,7 @@ Available Commands:
   holds       Show current holds
   library     Search for a library
   loans       Show current loans
-  repackage   repackage an ebook into an epub
+  repackage   repackage a book into an epub or MP3
   return      Return a loaned item
   search      Search for media
   sync        Sync data manually
@@ -64,6 +64,8 @@ Downloading 17 files to "Patrick Radden Keefe - Say Nothing"...
 
 $ books return 3984153
 Syncing...
+
+$ books repackage "Patrick Radden Keefe - Say Nothing"
 ```
 
 ## Caveats

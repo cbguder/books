@@ -10,8 +10,8 @@ import (
 	"github.com/cbguder/books/overdrive"
 )
 
-func Ebook(srcDir, dstFile string) error {
-	repackager, err := newEbookRepackager(srcDir, dstFile)
+func Ebook(srcDir, dstFile string, openbook *overdrive.Openbook) error {
+	repackager, err := newEbookRepackager(srcDir, dstFile, openbook)
 	if err != nil {
 		return err
 	}
@@ -29,20 +29,13 @@ type ebookRepackager struct {
 	addedFiles map[string]struct{}
 }
 
-func newEbookRepackager(srcDir, dstFile string) (*ebookRepackager, error) {
+func newEbookRepackager(srcDir, dstFile string, openbook *overdrive.Openbook) (*ebookRepackager, error) {
 	epubFile, err := os.Create(dstFile)
 	if err != nil {
 		return nil, err
 	}
 
 	writer, err := epub.NewWriter(epubFile)
-	if err != nil {
-		return nil, err
-	}
-
-	openbookPath := filepath.Join(srcDir, "_d", "openbook.json")
-
-	openbook, err := overdrive.ReadOpenbook(openbookPath)
 	if err != nil {
 		return nil, err
 	}
