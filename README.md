@@ -2,6 +2,32 @@
 
 Use the [Libby](https://libbyapp.com/) API from the command line.
 
+## Installation
+
+The easiest way to install `books` is to download a pre-built binary from
+the [releases page](https://github.com/cbguder/books/releases).
+
+Pre-built binaries are available for macOS and Linux.
+
+### Dependencies
+
+The `repackage` command depends on [ffmpeg](https://ffmpeg.org/) for audiobooks
+and [html-tidy](http://www.html-tidy.org/) for ebooks.
+
+You can install these using Homebrew on the Mac:
+
+    $ brew install ffmpeg tidy-html5
+
+or a package manager on Linux:
+
+    $ sudo apt install ffmpeg tidy
+
+### Installing From Source
+
+If you have Go installed, you can install `books` from source:
+
+    $ go install github.com/cbguder/books@latest
+
 ## Usage
 
 ```
