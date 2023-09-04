@@ -47,10 +47,12 @@ func clone(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
-	_, err = client.Chip(ctx)
+	resp, err := client.Chip(ctx)
 	if err != nil {
 		return err
 	}
+
+	cfg.Identity = resp.Identity
 
 	_, err = sync(ctx)
 	if err != nil {
