@@ -38,17 +38,17 @@ func (c *Client) CreateLoan(ctx context.Context, cardId, mediaId, format string)
 		return err
 	}
 
-	return c.do(req, nil)
+	return c.apiClient.Do(req, nil)
 }
 
 func (c *Client) DeleteLoan(ctx context.Context, cardId, mediaId string) error {
 	loc := fmt.Sprintf("%s/card/%s/loan/%s", sentry, cardId, mediaId)
-	req, err := c.request(ctx, "DELETE", loc, nil)
+	req, err := c.apiClient.Request(ctx, "DELETE", loc, nil)
 	if err != nil {
 		return err
 	}
 
-	return c.do(req, nil)
+	return c.apiClient.Do(req, nil)
 }
 
 func (c *Client) OpenLoan(ctx context.Context, cardId, mediaId, mediaTypeId string) (*OpenLoanResponse, error) {
@@ -58,7 +58,7 @@ func (c *Client) OpenLoan(ctx context.Context, cardId, mediaId, mediaTypeId stri
 	}
 
 	resp := OpenLoanResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	return &resp, err
 }
 
@@ -71,7 +71,7 @@ func (c *Client) GetRosters(ctx context.Context, rostersUrl, message string) ([]
 	}
 
 	var rosters []Roster
-	err = c.do(req, &rosters)
+	err = c.apiClient.Do(req, &rosters)
 	return rosters, err
 }
 
@@ -81,7 +81,7 @@ func (c *Client) Download(ctx context.Context, url string) (*http.Response, erro
 		return nil, err
 	}
 
-	resp, err := c.client.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func (c *Client) createLoanRequest(ctx context.Context, cardId, mediaId, format 
 
 	loc := fmt.Sprintf("%s/card/%s/loan/%s", sentry, cardId, mediaId)
 
-	return c.request(ctx, "POST", loc, body)
+	return c.apiClient.Request(ctx, "POST", loc, body)
 }
 
 func (c *Client) openBookRequest(ctx context.Context, cardId string, mediaId string, mediaTypeId string) (*http.Request, error) {
@@ -114,5 +114,5 @@ func (c *Client) openBookRequest(ctx context.Context, cardId string, mediaId str
 		loc = fmt.Sprintf("%s/open/%s/card/%s/title/%s", sentry, mediaTypeId, cardId, mediaId)
 	}
 
-	return c.request(ctx, "GET", loc, nil)
+	return c.apiClient.Request(ctx, "GET", loc, nil)
 }

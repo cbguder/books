@@ -2,7 +2,6 @@ package libby
 
 import (
 	"context"
-	"net/http"
 	"net/url"
 )
 
@@ -20,12 +19,13 @@ type System struct {
 
 func (c *Client) Autocomplete(ctx context.Context, query string) (*AutocompleteResponse, error) {
 	loc := baseUrl + "/locate/autocomplete/" + url.PathEscape(query)
-	req, err := http.NewRequestWithContext(ctx, "GET", loc, nil)
+
+	req, err := c.apiClient.Request(ctx, "GET", loc, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	resp := AutocompleteResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	return &resp, err
 }

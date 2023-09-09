@@ -61,7 +61,7 @@ func (c *Client) GetMedia(ctx context.Context, library, query string, format Med
 	}
 
 	resp := MediaResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	return &resp, err
 }
 

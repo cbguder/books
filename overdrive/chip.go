@@ -62,18 +62,18 @@ type Hold struct {
 }
 
 func (c *Client) Chip(ctx context.Context) (*ChipResponse, error) {
-	req, err := c.request(ctx, "POST", sentry+"/chip", nil)
+	req, err := c.apiClient.Request(ctx, "POST", sentry+"/chip", nil)
 	if err != nil {
 		return nil, err
 	}
 
 	resp := ChipResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	c.identity = resp.Identity
+	c.apiClient.SetAuthorization("Bearer " + resp.Identity)
 
 	return &resp, nil
 }
@@ -83,13 +83,13 @@ func (c *Client) ChipClone(ctx context.Context, code string) (*CloneResponse, er
 		Code: code,
 	}
 
-	req, err := c.request(ctx, "POST", sentry+"/chip/clone/code", reqBody)
+	req, err := c.apiClient.Request(ctx, "POST", sentry+"/chip/clone/code", reqBody)
 	if err != nil {
 		return nil, err
 	}
 
 	resp := CloneResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	if err != nil {
 		return nil, err
 	}
@@ -98,18 +98,18 @@ func (c *Client) ChipClone(ctx context.Context, code string) (*CloneResponse, er
 }
 
 func (c *Client) ChipSync(ctx context.Context) (*SyncResponse, error) {
-	req, err := c.request(ctx, "GET", sentry+"/chip/sync", nil)
+	req, err := c.apiClient.Request(ctx, "GET", sentry+"/chip/sync", nil)
 	if err != nil {
 		return nil, err
 	}
 
 	resp := SyncResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	c.identity = resp.Identity
+	c.apiClient.SetAuthorization("Bearer " + resp.Identity)
 
 	return &resp, nil
 }

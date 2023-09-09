@@ -22,7 +22,7 @@ func (c *Client) GetLibrariesByWebsiteId(ctx context.Context, websiteIds []int) 
 	}
 
 	resp := LibrariesResponse{}
-	err = c.do(req, &resp)
+	err = c.apiClient.Do(req, &resp)
 	return &resp, err
 }
 
