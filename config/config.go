@@ -37,7 +37,7 @@ func ReadConfig(filename string) (*Config, error) {
 }
 
 func WriteConfig(filename string, config *Config) error {
-	f, err := os.Create(filename)
+	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}
