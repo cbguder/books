@@ -14,8 +14,9 @@ file '{{. | absPath | escape}}'
 `
 
 const metadataTemplate = `;FFMETADATA1
-title={{.Title}}
 artist={{.Artist}}
+album={{.Title}}
+title={{.Title}}
 
 {{range .Chapters}}
 [CHAPTER]
