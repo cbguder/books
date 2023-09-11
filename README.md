@@ -1,6 +1,7 @@
 # Books
 
-Use the [Libby](https://libbyapp.com/) API from the command line.
+Use [Libby](https://libbyapp.com/) and [Goodreads](https://www.goodreads.com/)
+from the command line.
 
 ## Installation
 
@@ -90,8 +91,11 @@ $ books repackage "Patrick Radden Keefe - Say Nothing"
 
 ## Caveats
 
-Only supports borrowing audiobooks at the moment.
+* Only supports borrowing audiobooks at the moment
+* The `repackage` command is experimental, and is likely to fail or produce
+  invalid epub files
 
 ## See Also
 
-- [ping/odmpy](https://github.com/ping/odmpy) is a full-featured alternative written in Python
+- [ping/odmpy](https://github.com/ping/odmpy) is a full-featured alternative
+  written in Python
