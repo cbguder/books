@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -89,18 +90,30 @@ func (c *ApiClient) Request(ctx context.Context, method, url string, body any) (
 }
 
 func readerForBody(body any) (io.Reader, string, error) {
+	var contentType string
+	var reader io.Reader
+
 	if body == nil {
 		return nil, "", nil
 	}
 
-	if reader, ok := body.(io.Reader); ok {
-		return reader, "", nil
+	switch v := body.(type) {
+	case io.Reader:
+		return v, "", nil
+
+	case url.Values:
+		contentType = "application/x-www-form-urlencoded"
+		reader = strings.NewReader(v.Encode())
+
+	default:
+		bodyBytes, err := json.Marshal(body)
+		if err != nil {
+			return nil, "", err
+		}
+
+		contentType = "application/json"
+		reader = bytes.NewReader(bodyBytes)
 	}
 
-	bodyBytes, err := json.Marshal(body)
-	if err != nil {
-		return nil, "", err
-	}
-
-	return bytes.NewReader(bodyBytes), "application/json", nil
+	return reader, contentType, nil
 }

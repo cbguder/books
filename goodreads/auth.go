@@ -162,15 +162,7 @@ func (c *Client) registerRequest(ctx context.Context, email, password string) (*
 	body.AuthData.UserIdPassword.Password = password
 	body.UserContextMap.Frc = frcCookie
 
-	req, err := c.apiClient.Request(ctx, "POST", authBaseUrl+"/register", body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("User-Agent", authUserAgent)
-	req.Header.Set("x-amzn-identity-auth-domain", authDomain)
-
-	return req, nil
+	return c.authRequest(ctx, "POST", authBaseUrl+"/register", body)
 }
 
 func (c *Client) tokenRequest(ctx context.Context) (*http.Request, error) {
@@ -189,12 +181,13 @@ func (c *Client) tokenRequest(ctx context.Context) (*http.Request, error) {
 	val.Set("current_version", "6.12.1")
 	val.Set("previous_version", "6.12.1")
 
-	body := strings.NewReader(val.Encode())
+	return c.authRequest(ctx, "POST", authBaseUrl+"/token", val)
+}
 
-	req, err := c.apiClient.Request(ctx, "POST", authBaseUrl+"/token", body)
+func (c *Client) authRequest(ctx context.Context, method, url string, body any) (*http.Request, error) {
+	req, err := c.apiClient.Request(ctx, method, url, body)
 	req.Header.Set("User-Agent", authUserAgent)
 	req.Header.Set("x-amzn-identity-auth-domain", authDomain)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	return req, err
 }
