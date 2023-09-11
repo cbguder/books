@@ -1,9 +1,6 @@
 package overdrive
 
 import (
-	"net/http"
-	"net/http/cookiejar"
-
 	"github.com/cbguder/books/api_client"
 	"github.com/cbguder/books/config"
 )
@@ -11,14 +8,12 @@ import (
 const thunder = "https://thunder.api.overdrive.com/v2"
 const sentry = "https://sentry-read.svc.overdrive.com"
 
+type Client struct {
+	apiClient *api_client.ApiClient
+}
+
 func NewClient() *Client {
-	jar, _ := cookiejar.New(nil)
-
-	httpClient := &http.Client{
-		Jar: jar,
-	}
-
-	apiClient := api_client.NewApiClientWithHttpClient(httpClient)
+	apiClient := api_client.NewApiClient()
 
 	cfg := config.Get()
 	if cfg.Identity != "" {
@@ -26,12 +21,6 @@ func NewClient() *Client {
 	}
 
 	return &Client{
-		httpClient: httpClient,
-		apiClient:  apiClient,
+		apiClient: apiClient,
 	}
-}
-
-type Client struct {
-	httpClient *http.Client
-	apiClient  *api_client.ApiClient
 }

@@ -62,37 +62,6 @@ func (c *Client) OpenLoan(ctx context.Context, cardId, mediaId, mediaTypeId stri
 	return &resp, err
 }
 
-func (c *Client) GetRosters(ctx context.Context, rostersUrl, message string) ([]Roster, error) {
-	rostersUrl = rostersUrl + "?" + message
-
-	req, err := http.NewRequestWithContext(ctx, "GET", rostersUrl, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	var rosters []Roster
-	err = c.apiClient.Do(req, &rosters)
-	return rosters, err
-}
-
-func (c *Client) Download(ctx context.Context, url string) (*http.Response, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
-	return resp, err
-}
-
 func (c *Client) createLoanRequest(ctx context.Context, cardId, mediaId, format string) (*http.Request, error) {
 	body := CreateLoanRequest{
 		Period:      21,

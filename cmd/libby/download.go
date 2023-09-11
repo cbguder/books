@@ -3,10 +3,6 @@ package libby
 import (
 	"context"
 	"fmt"
-	"io"
-	"net/url"
-	"os"
-	"path/filepath"
 
 	"github.com/cbguder/books/overdrive"
 	"github.com/spf13/cobra"
@@ -40,88 +36,10 @@ func download(_ *cobra.Command, args []string) error {
 		return err
 	}
 
-	rosters, err := client.GetRosters(ctx, bookResp.Urls.Rosters, bookResp.Message)
-	if err != nil {
-		return err
-	}
-
-	contentRoster, err := findContentRoster(rosters)
-	if err != nil {
-		return err
-	}
-
 	destFolder := fmt.Sprintf("%s - %s", loan.FirstCreatorName, loan.Title)
-	fmt.Printf("Downloading %d files to \"%s\"...\n", len(contentRoster.Entries)+1, destFolder)
 
-	err = os.MkdirAll(destFolder, 0755)
-	if err != nil {
-		return err
-	}
-
-	for _, entry := range contentRoster.Entries {
-		err = downloadToFile(ctx, client, destFolder, entry.Url)
-		if err != nil {
-			return err
-		}
-	}
-
-	err = downloadToFile(ctx, client, destFolder, bookResp.Urls.Openbook)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func findContentRoster(rosters []overdrive.Roster) (*overdrive.Roster, error) {
-	for _, roster := range rosters {
-		if roster.Group == "title-content" {
-			return &roster, nil
-		}
-	}
-
-	return nil, fmt.Errorf("failed to find content roster")
-}
-
-func filenameFromUrl(entryUrl string) (string, error) {
-	u, err := url.Parse(entryUrl)
-	if err != nil {
-		return "", err
-	}
-
-	return u.Path, nil
-}
-
-func downloadToFile(ctx context.Context, client *overdrive.Client, destFolder, srcUrl string) error {
-	fname, err := filenameFromUrl(srcUrl)
-	if err != nil {
-		return err
-	}
-
-	fpath := filepath.Join(destFolder, fname)
-
-	parentDir := filepath.Dir(fpath)
-	err = os.MkdirAll(parentDir, 0755)
-	if err != nil {
-		return err
-	}
-
-	f, err := os.Create(fpath)
-	if err != nil {
-		return err
-	}
-
-	defer f.Close()
-
-	resp, err := client.Download(ctx, srcUrl)
-	if err != nil {
-		return err
-	}
-
-	defer resp.Body.Close()
-
-	_, err = io.Copy(f, resp.Body)
-	return err
+	dl := overdrive.NewDownloader()
+	return dl.Download(ctx, bookResp, destFolder)
 }
 
 func findLoan(ctx context.Context, mediaId string) (*overdrive.Loan, error) {
