@@ -4,14 +4,20 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type ApiClient struct {
 	client        *http.Client
 	authorization string
+}
+
+type Decoder interface {
+	Decode(v any) error
 }
 
 func NewApiClient() *ApiClient {
@@ -44,19 +50,26 @@ func (c *ApiClient) Do(req *http.Request, response any) error {
 		return nil
 	}
 
-	decoder := json.NewDecoder(resp.Body)
+	contentType := resp.Header.Get("Content-Type")
+
+	var decoder Decoder
+	if strings.HasPrefix(contentType, "application/json") {
+		decoder = json.NewDecoder(resp.Body)
+	} else if strings.HasPrefix(contentType, "application/xml") {
+		decoder = xml.NewDecoder(resp.Body)
+	}
+
+	if decoder == nil {
+		return fmt.Errorf("unexpected content type: %s", contentType)
+	}
+
 	return decoder.Decode(response)
 }
 
 func (c *ApiClient) Request(ctx context.Context, method, url string, body any) (*http.Request, error) {
-	var bodyReader io.Reader
-	if body != nil {
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			return nil, err
-		}
-
-		bodyReader = bytes.NewReader(bodyBytes)
+	bodyReader, contentType, err := readerForBody(body)
+	if err != nil {
+		return nil, err
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
@@ -64,8 +77,8 @@ func (c *ApiClient) Request(ctx context.Context, method, url string, body any) (
 		return nil, err
 	}
 
-	if bodyReader != nil {
-		req.Header.Set("Content-Type", "application/json")
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
 	}
 
 	if c.authorization != "" {
@@ -73,4 +86,21 @@ func (c *ApiClient) Request(ctx context.Context, method, url string, body any) (
 	}
 
 	return req, nil
+}
+
+func readerForBody(body any) (io.Reader, string, error) {
+	if body == nil {
+		return nil, "", nil
+	}
+
+	if reader, ok := body.(io.Reader); ok {
+		return reader, "", nil
+	}
+
+	bodyBytes, err := json.Marshal(body)
+	if err != nil {
+		return nil, "", err
+	}
+
+	return bytes.NewReader(bodyBytes), "application/json", nil
 }

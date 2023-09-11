@@ -9,6 +9,8 @@ import (
 type Config struct {
 	Identity string `yaml:"identity"`
 	Cards    []Card `yaml:"cards"`
+
+	Goodreads Goodreads `yaml:"goodreads"`
 }
 
 type Card struct {
@@ -20,6 +22,13 @@ type Card struct {
 type Library struct {
 	Name string `yaml:"name"`
 	Key  string `yaml:"key"`
+}
+
+type Goodreads struct {
+	AccessToken  string `yaml:"access_token"`
+	RefreshToken string `yaml:"refresh_token"`
+	ExpiresAt    int64  `yaml:"expires_at"`
+	UserId       string `yaml:"user_id"`
 }
 
 func ReadConfig(filename string) (*Config, error) {
