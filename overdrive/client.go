@@ -5,12 +5,13 @@ import (
 	"net/http/cookiejar"
 
 	"github.com/cbguder/books/api_client"
+	"github.com/cbguder/books/config"
 )
 
 const thunder = "https://thunder.api.overdrive.com/v2"
 const sentry = "https://sentry-read.svc.overdrive.com"
 
-func NewClient(identity string) *Client {
+func NewClient() *Client {
 	jar, _ := cookiejar.New(nil)
 
 	httpClient := &http.Client{
@@ -18,18 +19,19 @@ func NewClient(identity string) *Client {
 	}
 
 	apiClient := api_client.NewApiClientWithHttpClient(httpClient)
-	apiClient.SetAuthorization("Bearer " + identity)
+
+	cfg := config.Get()
+	if cfg.Identity != "" {
+		apiClient.SetAuthorization("Bearer " + cfg.Identity)
+	}
 
 	return &Client{
-		identity:   identity,
 		httpClient: httpClient,
 		apiClient:  apiClient,
 	}
 }
 
 type Client struct {
-	identity string
-
 	httpClient *http.Client
 	apiClient  *api_client.ApiClient
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/cbguder/books/api_client"
+	"github.com/cbguder/books/config"
 )
 
 const (
@@ -17,13 +18,17 @@ type Client struct {
 
 	accessToken  string
 	refreshToken string
+	userId       string
 }
 
-func NewClient(accessToken, refreshToken string) *Client {
+func NewClient() *Client {
+	cfg := config.Get()
+
 	return &Client{
 		apiClient:    api_client.NewApiClient(),
-		accessToken:  accessToken,
-		refreshToken: refreshToken,
+		accessToken:  cfg.Goodreads.AccessToken,
+		refreshToken: cfg.Goodreads.RefreshToken,
+		userId:       cfg.Goodreads.UserId,
 	}
 }
 

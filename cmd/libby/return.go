@@ -1,4 +1,4 @@
-package cmd
+package libby
 
 import (
 	"context"
@@ -15,19 +15,19 @@ var returnCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(returnCmd)
+	LibbyCmd.AddCommand(returnCmd)
 }
 
 func returnE(_ *cobra.Command, args []string) error {
 	mediaId := args[0]
 
-	loan, err := findLoan(context.Background(), mediaId)
+	ctx := context.Background()
+
+	loan, err := findLoan(ctx, mediaId)
 	if err != nil {
 		return err
 	}
 
-	client := overdrive.NewClient(cfg.Identity)
-	ctx := context.Background()
-
+	client := overdrive.NewClient()
 	return client.DeleteLoan(ctx, loan.CardId, mediaId)
 }

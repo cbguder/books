@@ -1,25 +1,26 @@
-package cmd
+package libby
 
 import (
 	"context"
 	"fmt"
 	"regexp"
 
+	"github.com/cbguder/books/config"
 	"github.com/cbguder/books/overdrive"
 	"github.com/spf13/cobra"
 )
 
 var cloneCmd = &cobra.Command{
-	Use:   "clone",
-	Short: "Clone Libby account from another device",
-	RunE:  clone,
+	Use:   "auth",
+	Short: "Authenticate with Libby",
+	RunE:  auth,
 }
 
 func init() {
-	rootCmd.AddCommand(cloneCmd)
+	LibbyCmd.AddCommand(cloneCmd)
 }
 
-func clone(_ *cobra.Command, _ []string) error {
+func auth(_ *cobra.Command, _ []string) error {
 	fmt.Println("Go to Menu > Settings > Copy To Another Device. You will see a setup code. Enter it below.")
 	fmt.Print("Setup code: ")
 
@@ -34,7 +35,7 @@ func clone(_ *cobra.Command, _ []string) error {
 		return fmt.Errorf("setup code must be 8 digits")
 	}
 
-	client := overdrive.NewClient("")
+	client := overdrive.NewClient()
 	ctx := context.Background()
 
 	_, err = client.Chip(ctx)
@@ -52,6 +53,7 @@ func clone(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
+	cfg := config.Get()
 	cfg.Identity = resp.Identity
 
 	_, err = sync(ctx)

@@ -1,9 +1,10 @@
-package cmd
+package libby
 
 import (
 	"context"
 	"fmt"
 
+	"github.com/cbguder/books/cmd/out"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,7 @@ var holdsCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(holdsCmd)
+	LibbyCmd.AddCommand(holdsCmd)
 }
 
 func holds(_ *cobra.Command, _ []string) error {
@@ -24,7 +25,7 @@ func holds(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
-	t := newTableWriter()
+	t := out.NewTableWriter()
 	t.AppendHeader(table.Row{"Author", "Title", "Type", "Hold Placed", "Est. Wait"})
 
 	for _, hold := range resp.Holds {

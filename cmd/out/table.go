@@ -1,4 +1,4 @@
-package cmd
+package out
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/text"
 )
 
-func newTableWriter() table.Writer {
+func NewTableWriter() table.Writer {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 

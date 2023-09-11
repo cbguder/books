@@ -6,11 +6,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var config Config
+
 type Config struct {
 	Identity string `yaml:"identity"`
 	Cards    []Card `yaml:"cards"`
 
 	Goodreads Goodreads `yaml:"goodreads"`
+
+	path string
 }
 
 type Card struct {
@@ -31,22 +35,34 @@ type Goodreads struct {
 	UserId       string `yaml:"user_id"`
 }
 
-func ReadConfig(filename string) (*Config, error) {
-	config := Config{}
+func Get() *Config {
+	return &config
+}
+
+func Load(filename string) error {
+	newConfig := Config{
+		path: filename,
+	}
 
 	f, err := os.Open(filename)
 	if err != nil {
-		return &config, err
+		return err
 	}
 
 	defer f.Close()
 
-	err = yaml.NewDecoder(f).Decode(&config)
-	return &config, err
+	err = yaml.NewDecoder(f).Decode(&newConfig)
+	if err != nil {
+		return err
+	}
+
+	config = newConfig
+
+	return nil
 }
 
-func WriteConfig(filename string, config *Config) error {
-	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+func (c *Config) Save() error {
+	f, err := os.OpenFile(c.path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}

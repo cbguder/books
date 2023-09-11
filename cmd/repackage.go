@@ -11,7 +11,7 @@ import (
 
 var repackageCmd = &cobra.Command{
 	Use:   "repackage <path>",
-	Short: "repackage a book into an epub or MP3",
+	Short: "Repackage a book into an epub or MP3",
 	Args:  cobra.ExactArgs(1),
 	RunE:  repackageE,
 }

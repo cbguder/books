@@ -1,9 +1,11 @@
-package cmd
+package libby
 
 import (
 	"context"
 	"fmt"
 
+	"github.com/cbguder/books/cmd/out"
+	"github.com/cbguder/books/config"
 	"github.com/cbguder/books/overdrive"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
@@ -17,14 +19,14 @@ var searchCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(searchCmd)
+	LibbyCmd.AddCommand(searchCmd)
 
 	searchCmd.Flags().StringP("library", "l", "", "Library code (e.g. sfpl)")
 	searchCmd.Flags().StringP("format", "f", "", "Media format (audiobook or ebook)")
 }
 
 func search(cmd *cobra.Command, args []string) error {
-	client := overdrive.NewClient(cfg.Identity)
+	client := overdrive.NewClient()
 
 	libraryFlag, _ := cmd.Flags().GetString("library")
 
@@ -35,6 +37,7 @@ func search(cmd *cobra.Command, args []string) error {
 		return searchSingleLibrary(client, "", libraryFlag, args[0], format)
 	}
 
+	cfg := config.Get()
 	if len(cfg.Cards) == 1 {
 		card := cfg.Cards[0]
 		return searchSingleLibrary(client, "", card.Library.Key, args[0], format)
@@ -70,7 +73,7 @@ func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query stri
 		return err
 	}
 
-	t := newTableWriter()
+	t := out.NewTableWriter()
 
 	if title != "" {
 		t.SetTitle(title)

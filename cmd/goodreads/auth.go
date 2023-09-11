@@ -1,4 +1,4 @@
-package cmd
+package goodreads
 
 import (
 	"context"
@@ -13,18 +13,18 @@ import (
 	"golang.org/x/term"
 )
 
-var goodreadsAuthCmd = &cobra.Command{
+var authCmd = &cobra.Command{
 	Use:   "auth",
-	Short: "Authenticate",
-	RunE:  goodreadsAuth,
+	Short: "Authenticate with Goodreads",
+	RunE:  auth,
 }
 
 func init() {
-	goodreadsCmd.AddCommand(goodreadsAuthCmd)
+	GoodreadsCmd.AddCommand(authCmd)
 }
 
-func goodreadsAuth(_ *cobra.Command, _ []string) error {
-	client := goodreads.NewClient("", "")
+func auth(_ *cobra.Command, _ []string) error {
+	client := goodreads.NewClient()
 
 	var email string
 
@@ -63,10 +63,11 @@ func goodreadsAuth(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
+	cfg := config.Get()
 	cfg.Goodreads.AccessToken = registerResp.Response.Success.Tokens.Bearer.AccessToken
 	cfg.Goodreads.RefreshToken = registerResp.Response.Success.Tokens.Bearer.RefreshToken
 	cfg.Goodreads.ExpiresAt = expiresAt.Unix()
 	cfg.Goodreads.UserId = currentUserResp.CurrentUser.User.ID
 
-	return config.WriteConfig(cfgFile, cfg)
+	return cfg.Save()
 }

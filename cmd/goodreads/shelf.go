@@ -1,8 +1,9 @@
-package cmd
+package goodreads
 
 import (
 	"context"
 
+	"github.com/cbguder/books/cmd/out"
 	"github.com/cbguder/books/goodreads"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
@@ -16,18 +17,18 @@ var shelfCmd = &cobra.Command{
 }
 
 func init() {
-	goodreadsCmd.AddCommand(shelfCmd)
+	GoodreadsCmd.AddCommand(shelfCmd)
 }
 
 func shelfE(_ *cobra.Command, args []string) error {
-	client := goodreads.NewClient(cfg.Goodreads.AccessToken, cfg.Goodreads.RefreshToken)
+	client := goodreads.NewClient()
 
-	resp, err := client.GetReviews(context.Background(), cfg.Goodreads.UserId, args[0])
+	resp, err := client.GetReviews(context.Background(), args[0])
 	if err != nil {
 		return err
 	}
 
-	t := newTableWriter()
+	t := out.NewTableWriter()
 	t.AppendHeader(table.Row{"Author", "Title", "Year"})
 
 	for _, review := range resp.Reviews {

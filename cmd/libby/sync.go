@@ -1,4 +1,4 @@
-package cmd
+package libby
 
 import (
 	"context"
@@ -11,12 +11,12 @@ import (
 
 var syncCmd = &cobra.Command{
 	Use:   "sync",
-	Short: "Sync data manually",
+	Short: "Force sync",
 	RunE:  syncE,
 }
 
 func init() {
-	rootCmd.AddCommand(syncCmd)
+	LibbyCmd.AddCommand(syncCmd)
 }
 
 func syncE(_ *cobra.Command, _ []string) error {
@@ -25,7 +25,7 @@ func syncE(_ *cobra.Command, _ []string) error {
 }
 
 func sync(ctx context.Context) (*overdrive.SyncResponse, error) {
-	client := overdrive.NewClient(cfg.Identity)
+	client := overdrive.NewClient()
 
 	fmt.Println("Syncing...")
 	resp, err := client.ChipSync(ctx)
@@ -33,9 +33,10 @@ func sync(ctx context.Context) (*overdrive.SyncResponse, error) {
 		return nil, err
 	}
 
+	cfg := config.Get()
 	cfg.Identity = resp.Identity
 	cfg.Cards = mapCards(resp.Cards)
-	err = config.WriteConfig(cfgFile, cfg)
+	err = cfg.Save()
 
 	return resp, err
 }

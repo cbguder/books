@@ -22,7 +22,7 @@ type ReviewsResponse struct {
 	} `xml:"reviews>review"`
 }
 
-func (c *Client) GetReviews(ctx context.Context, userId, shelfName string) (*ReviewsResponse, error) {
+func (c *Client) GetReviews(ctx context.Context, shelfName string) (*ReviewsResponse, error) {
 	val := url.Values{}
 	val.Set("_nc", "true")
 	val.Set("format", "xml")
@@ -33,7 +33,7 @@ func (c *Client) GetReviews(ctx context.Context, userId, shelfName string) (*Rev
 	val.Set("sort", "date_updated")
 	val.Set("v", "2")
 
-	loc := fmt.Sprintf("%s/review/list/%s?%s", baseUrl, userId, val.Encode())
+	loc := fmt.Sprintf("%s/review/list/%s?%s", baseUrl, c.userId, val.Encode())
 	req, err := c.request(ctx, "GET", loc, nil)
 	if err != nil {
 		return nil, err

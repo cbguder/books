@@ -1,4 +1,4 @@
-package cmd
+package libby
 
 import (
 	"context"
@@ -20,7 +20,7 @@ var downloadCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(downloadCmd)
+	LibbyCmd.AddCommand(downloadCmd)
 }
 
 func download(_ *cobra.Command, args []string) error {
@@ -31,7 +31,7 @@ func download(_ *cobra.Command, args []string) error {
 		return err
 	}
 
-	client := overdrive.NewClient(cfg.Identity)
+	client := overdrive.NewClient()
 	ctx := context.Background()
 
 	fmt.Println("Opening book...")

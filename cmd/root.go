@@ -4,12 +4,13 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cbguder/books/cmd/goodreads"
+	"github.com/cbguder/books/cmd/libby"
 	"github.com/cbguder/books/config"
 	"github.com/spf13/cobra"
 )
 
 var cfgFile string
-var cfg *config.Config
 
 var rootCmd = &cobra.Command{
 	Use: "books",
@@ -22,6 +23,9 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	rootCmd.AddCommand(goodreads.GoodreadsCmd)
+	rootCmd.AddCommand(libby.LibbyCmd)
+
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.books.yml)")
 }
 
@@ -32,5 +36,5 @@ func initConfig() {
 		cfgFile = filepath.Join(home, ".books.yml")
 	}
 
-	cfg, _ = config.ReadConfig(cfgFile)
+	config.Load(cfgFile)
 }

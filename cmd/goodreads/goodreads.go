@@ -1,4 +1,4 @@
-package cmd
+package goodreads
 
 import (
 	"context"
@@ -10,22 +10,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var goodreadsCmd = &cobra.Command{
+var GoodreadsCmd = &cobra.Command{
 	Use:   "goodreads",
-	Short: "Goodreads",
+	Short: "Goodreads commands",
 
-	PersistentPreRunE: goodreadsEnsureToken,
+	PersistentPreRunE: ensureAuth,
 }
 
-func init() {
-	rootCmd.AddCommand(goodreadsCmd)
-}
-
-func goodreadsEnsureToken(cmd *cobra.Command, _ []string) error {
+func ensureAuth(cmd *cobra.Command, _ []string) error {
 	if cmd.Name() == "auth" {
 		return nil
 	}
 
+	cfg := config.Get()
 	if cfg.Goodreads.AccessToken == "" || cfg.Goodreads.RefreshToken == "" {
 		return fmt.Errorf("Goodreads access token not found. Please authenticate first.")
 	}
@@ -41,7 +38,7 @@ func goodreadsEnsureToken(cmd *cobra.Command, _ []string) error {
 func goodreadsRefreshToken() error {
 	fmt.Println("Refreshing Goodreads access token...")
 
-	client := goodreads.NewClient(cfg.Goodreads.AccessToken, cfg.Goodreads.RefreshToken)
+	client := goodreads.NewClient()
 	resp, err := client.Token(context.Background())
 	if err != nil {
 		return err
@@ -49,8 +46,8 @@ func goodreadsRefreshToken() error {
 
 	expiresAt := time.Now().Add(time.Second * time.Duration(resp.ExpiresIn))
 
+	cfg := config.Get()
 	cfg.Goodreads.AccessToken = resp.AccessToken
 	cfg.Goodreads.ExpiresAt = expiresAt.Unix()
-
-	return config.WriteConfig(cfgFile, cfg)
+	return cfg.Save()
 }

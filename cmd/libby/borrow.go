@@ -1,4 +1,4 @@
-package cmd
+package libby
 
 import (
 	"context"
@@ -17,7 +17,7 @@ var borrowCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(borrowCmd)
+	LibbyCmd.AddCommand(borrowCmd)
 
 	borrowCmd.Flags().StringP("library", "l", "", "Library code (e.g. sfpl, defaults to first library)")
 }
@@ -31,13 +31,13 @@ func borrow(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	client := overdrive.NewClient(cfg.Identity)
-	ctx := context.Background()
-
-	return client.CreateLoan(ctx, card.Id, mediaId, "audiobook")
+	client := overdrive.NewClient()
+	return client.CreateLoan(context.Background(), card.Id, mediaId, "audiobook")
 }
 
 func getCard(libraryCode string) (*config.Card, error) {
+	cfg := config.Get()
+
 	if len(cfg.Cards) == 0 {
 		return nil, fmt.Errorf("no library cards stored")
 	}

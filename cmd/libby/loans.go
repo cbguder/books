@@ -1,7 +1,9 @@
-package cmd
+package libby
 
 import (
 	"context"
+
+	"github.com/cbguder/books/cmd/out"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +15,7 @@ var loansCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(loansCmd)
+	LibbyCmd.AddCommand(loansCmd)
 }
 
 func loans(_ *cobra.Command, _ []string) error {
@@ -22,7 +24,7 @@ func loans(_ *cobra.Command, _ []string) error {
 		return err
 	}
 
-	t := newTableWriter()
+	t := out.NewTableWriter()
 	t.AppendHeader(table.Row{"ID", "Author", "Title", "Type", "Checkout Date", "Due Date"})
 
 	for _, loan := range resp.Loans {

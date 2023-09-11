@@ -1,7 +1,9 @@
-package cmd
+package libby
 
 import (
 	"context"
+
+	"github.com/cbguder/books/cmd/out"
 	"github.com/cbguder/books/libby"
 	"github.com/cbguder/books/overdrive"
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -16,7 +18,7 @@ var libraryCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(libraryCmd)
+	LibbyCmd.AddCommand(libraryCmd)
 }
 
 func library(_ *cobra.Command, args []string) error {
@@ -28,13 +30,13 @@ func library(_ *cobra.Command, args []string) error {
 
 	websiteIds := uniqueWebsiteIds(acResp)
 
-	odClient := overdrive.NewClient(cfg.Identity)
+	odClient := overdrive.NewClient()
 	libResp, err := odClient.GetLibrariesByWebsiteId(context.Background(), websiteIds)
 	if err != nil {
 		return err
 	}
 
-	t := newTableWriter()
+	t := out.NewTableWriter()
 	t.AppendHeader(table.Row{"ID", "Name"})
 
 	for _, item := range libResp.Items {
