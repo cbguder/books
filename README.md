@@ -35,18 +35,12 @@ Usage:
   books [command]
 
 Available Commands:
-  borrow      Borrow a media item
-  clone       Clone Libby account from another device
   completion  Generate the autocompletion script for the specified shell
-  download    Download a borrowed media item
+  goodreads   Goodreads commands
   help        Help about any command
-  holds       Show current holds
-  library     Search for a library
-  loans       Show current loans
-  repackage   repackage a book into an epub or MP3
-  return      Return a loaned item
-  search      Search for media
-  sync        Sync data manually
+  libby       Libby commands
+  repackage   Repackage a book into an epub or MP3
+  version     Print version information
 
 Flags:
       --config string   config file (default is $HOME/.books.yml)
