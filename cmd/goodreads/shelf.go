@@ -13,14 +13,14 @@ var shelfCmd = &cobra.Command{
 	Use:   "shelf <name>",
 	Short: "List books on shelf",
 	Args:  cobra.ExactArgs(1),
-	RunE:  shelfE,
+	RunE:  shelf,
 }
 
 func init() {
 	GoodreadsCmd.AddCommand(shelfCmd)
 }
 
-func shelfE(_ *cobra.Command, args []string) error {
+func shelf(_ *cobra.Command, args []string) error {
 	client := goodreads.NewClient()
 
 	resp, err := client.GetReviews(context.Background(), args[0])

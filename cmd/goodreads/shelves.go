@@ -12,14 +12,14 @@ import (
 var shelvesCmd = &cobra.Command{
 	Use:   "shelves",
 	Short: "List shelves",
-	RunE:  shelvesE,
+	RunE:  shelves,
 }
 
 func init() {
 	GoodreadsCmd.AddCommand(shelvesCmd)
 }
 
-func shelvesE(_ *cobra.Command, _ []string) error {
+func shelves(_ *cobra.Command, _ []string) error {
 	client := goodreads.NewClient()
 
 	resp, err := client.GetCurrentUserShelves(context.Background())
