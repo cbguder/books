@@ -43,7 +43,7 @@ func (c *ApiClient) Do(req *http.Request, response any) error {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
