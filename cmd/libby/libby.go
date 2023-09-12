@@ -8,8 +8,9 @@ import (
 )
 
 var LibbyCmd = &cobra.Command{
-	Use:   "libby",
-	Short: "Libby commands",
+	Use:     "libby",
+	Aliases: []string{"lib"},
+	Short:   "Libby commands",
 
 	PersistentPreRunE: ensureAuth,
 }

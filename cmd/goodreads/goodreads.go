@@ -11,8 +11,9 @@ import (
 )
 
 var GoodreadsCmd = &cobra.Command{
-	Use:   "goodreads",
-	Short: "Goodreads commands",
+	Use:     "goodreads",
+	Aliases: []string{"gr"},
+	Short:   "Goodreads commands",
 
 	PersistentPreRunE: ensureAuth,
 }
