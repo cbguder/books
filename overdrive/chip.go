@@ -54,6 +54,7 @@ type Loan struct {
 }
 
 type Hold struct {
+	Id                string    `json:"id"`
 	EstimatedWaitDays int       `json:"estimatedWaitDays"`
 	FirstCreatorName  string    `json:"firstCreatorName"`
 	PlacedDate        time.Time `json:"placedDate"`

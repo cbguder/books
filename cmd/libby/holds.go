@@ -26,10 +26,11 @@ func holds(_ *cobra.Command, _ []string) error {
 	}
 
 	t := out.NewTableWriter()
-	t.AppendHeader(table.Row{"Author", "Title", "Type", "Hold Placed", "Est. Wait"})
+	t.AppendHeader(table.Row{"ID", "Author", "Title", "Type", "Hold Placed", "Est. Wait"})
 
 	for _, hold := range resp.Holds {
 		t.AppendRow(table.Row{
+			hold.Id,
 			hold.FirstCreatorName,
 			hold.Title,
 			hold.Type.Name,
