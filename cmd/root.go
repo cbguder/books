@@ -10,10 +10,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cfgFile string
+var (
+	Version string
+	cfgFile string
+)
 
 var rootCmd = &cobra.Command{
-	Use: "books",
+	Use:     "books",
+	Version: Version,
 }
 
 func Execute() error {
