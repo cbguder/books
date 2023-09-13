@@ -11,13 +11,13 @@ import (
 )
 
 var (
-	Version string
+	version string
 	cfgFile string
 )
 
 var rootCmd = &cobra.Command{
 	Use:     "books",
-	Version: Version,
+	Version: version,
 }
 
 func Execute() error {

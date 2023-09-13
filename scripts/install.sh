@@ -3,4 +3,4 @@
 set -eux
 
 TAG=$(git describe --tags)
-go install -ldflags "-X github.com/cbguder/books/cmd.Version=${TAG}"
+go install -ldflags "-X github.com/cbguder/books/cmd.version=${TAG}"
