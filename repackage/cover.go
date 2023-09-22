@@ -1,16 +1,15 @@
 package repackage
 
 import (
+	"bytes"
 	"mime"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/cbguder/books/epub"
+	"golang.org/x/net/html"
 )
-
-const imgRe = `<img src="([^"]+)"`
 
 func (e *ebookRepackager) addCoverImage() error {
 	// Try to extract cover image from cover doc
@@ -59,14 +58,37 @@ func (e *ebookRepackager) extractCoverImageFromCoverDoc() (string, error) {
 		return "", err
 	}
 
-	re := regexp.MustCompile(imgRe)
-	matches := re.FindStringSubmatch(string(processed))
-	if len(matches) < 2 {
-		return "", nil
+	imagePathRelativeToCoverDoc, err := extractFirstImageSource(processed)
+	if err != nil {
+		return "", err
 	}
 
-	imagePathRelativeToCoverDoc := matches[1]
 	coverDir := filepath.Dir(fullPath)
 	absImagePath := filepath.Join(coverDir, imagePathRelativeToCoverDoc)
 	return filepath.Rel(e.srcDir, absImagePath)
+}
+
+func extractFirstImageSource(data []byte) (string, error) {
+	r := bytes.NewReader(data)
+	z := html.NewTokenizer(r)
+
+	for {
+		tt := z.Next()
+
+		if tt == html.ErrorToken {
+			return "", z.Err()
+		}
+
+		if tt == html.StartTagToken || tt == html.SelfClosingTagToken {
+			t := z.Token()
+
+			if t.Data == "img" {
+				for _, a := range t.Attr {
+					if a.Key == "src" {
+						return a.Val, nil
+					}
+				}
+			}
+		}
+	}
 }
