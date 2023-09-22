@@ -65,5 +65,8 @@ func (e *ebookRepackager) extractCoverImageFromCoverDoc() (string, error) {
 		return "", nil
 	}
 
-	return matches[1], nil
+	imagePathRelativeToCoverDoc := matches[1]
+	coverDir := filepath.Dir(fullPath)
+	absImagePath := filepath.Join(coverDir, imagePathRelativeToCoverDoc)
+	return filepath.Rel(e.srcDir, absImagePath)
 }
