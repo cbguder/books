@@ -91,7 +91,6 @@ $ books repackage "Patrick Radden Keefe - Say Nothing"
 
 ## Caveats
 
-* Only supports borrowing audiobooks at the moment
 * The `repackage` command is experimental, and is likely to fail or produce
   invalid epub files
 

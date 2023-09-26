@@ -68,7 +68,7 @@ func formatFromFlag(formatFlag string) overdrive.MediaFormat {
 }
 
 func searchSingleLibrary(client *overdrive.Client, title, libraryKey, query string, format overdrive.MediaFormat) error {
-	resp, err := client.GetMedia(context.Background(), libraryKey, query, format)
+	resp, err := client.SearchMedia(context.Background(), libraryKey, query, format)
 	if err != nil {
 		return err
 	}

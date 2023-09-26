@@ -32,7 +32,14 @@ func borrow(cmd *cobra.Command, args []string) error {
 	}
 
 	client := overdrive.NewClient()
-	return client.CreateLoan(context.Background(), card.Id, mediaId, "audiobook")
+	ctx := context.Background()
+
+	media, err := client.GetMedia(ctx, card.Library.Key, mediaId)
+	if err != nil {
+		return err
+	}
+
+	return client.CreateLoan(ctx, card.Id, mediaId, media.Type.Id)
 }
 
 func getCard(libraryCode string) (*config.Card, error) {

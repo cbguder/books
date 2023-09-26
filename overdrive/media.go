@@ -31,22 +31,24 @@ func (f MediaFormat) queryValue() string {
 	return allFormats
 }
 
-type MediaResponse struct {
-	Items []struct {
-		Id    string    `json:"id"`
-		Title string    `json:"title"`
-		Type  MediaType `json:"type"`
+type GetMediaResponse struct {
+	Id    string    `json:"id"`
+	Title string    `json:"title"`
+	Type  MediaType `json:"type"`
 
-		EstimatedWaitDays int       `json:"estimatedWaitDays"`
-		FirstCreatorName  string    `json:"firstCreatorName"`
-		IsAvailable       bool      `json:"isAvailable"`
-		PublishDate       time.Time `json:"publishDate"`
+	EstimatedWaitDays int       `json:"estimatedWaitDays"`
+	FirstCreatorName  string    `json:"firstCreatorName"`
+	IsAvailable       bool      `json:"isAvailable"`
+	PublishDate       time.Time `json:"publishDate"`
 
-		Languages []struct {
-			Name string `json:"name"`
-			Id   string `json:"id"`
-		} `json:"languages"`
-	} `json:"items"`
+	Languages []struct {
+		Name string `json:"name"`
+		Id   string `json:"id"`
+	} `json:"languages"`
+}
+
+type SearchMediaResponse struct {
+	Items []GetMediaResponse `json:"items"`
 }
 
 type MediaType struct {
@@ -54,18 +56,34 @@ type MediaType struct {
 	Id   string `json:"id"`
 }
 
-func (c *Client) GetMedia(ctx context.Context, library, query string, format MediaFormat) (*MediaResponse, error) {
-	req, err := mediaQueryRequest(ctx, library, query, format)
+func (c *Client) GetMedia(ctx context.Context, library, titleId string) (*GetMediaResponse, error) {
+	req, err := getMediaRequest(ctx, library, titleId)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := MediaResponse{}
+	resp := GetMediaResponse{}
 	err = c.apiClient.Do(req, &resp)
 	return &resp, err
 }
 
-func mediaQueryRequest(ctx context.Context, library, query string, format MediaFormat) (*http.Request, error) {
+func (c *Client) SearchMedia(ctx context.Context, library, query string, format MediaFormat) (*SearchMediaResponse, error) {
+	req, err := searchMediaRequest(ctx, library, query, format)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := SearchMediaResponse{}
+	err = c.apiClient.Do(req, &resp)
+	return &resp, err
+}
+
+func getMediaRequest(ctx context.Context, library, titleId string) (*http.Request, error) {
+	loc := fmt.Sprintf("%s/libraries/%s/media/%s", thunder, library, titleId)
+	return http.NewRequestWithContext(ctx, "GET", loc, nil)
+}
+
+func searchMediaRequest(ctx context.Context, library, query string, format MediaFormat) (*http.Request, error) {
 	vls := url.Values{}
 	vls.Set("query", query)
 	vls.Set("format", format.queryValue())
