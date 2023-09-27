@@ -92,7 +92,8 @@ $ books repackage "Patrick Radden Keefe - Say Nothing"
 ## Caveats
 
 * The `repackage` command is experimental, and is likely to fail or produce
-  invalid epub files
+  invalid epub files. Validating the output with
+  [EPUBCheck](https://www.w3.org/publishing/epubcheck/) is recommended.
 
 ## See Also
 
