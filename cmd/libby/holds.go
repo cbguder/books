@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cbguder/books/cards"
 	"github.com/cbguder/books/cmd/out"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
@@ -26,14 +27,20 @@ func holds(_ *cobra.Command, _ []string) error {
 	}
 
 	t := out.NewTableWriter()
-	t.AppendHeader(table.Row{"ID", "Author", "Title", "Type", "Hold Placed", "Est. Wait"})
+	t.AppendHeader(table.Row{"ID", "Author", "Title", "Type", "Library", "Hold Placed", "Est. Wait"})
 
 	for _, hold := range resp.Holds {
+		card, err := cards.GetById(hold.CardId)
+		if err != nil {
+			return err
+		}
+
 		t.AppendRow(table.Row{
 			hold.Id,
 			hold.FirstCreatorName,
 			hold.Title,
 			hold.Type.Name,
+			card.Library.Key,
 			hold.PlacedDate.Format("2006-01-02"),
 			estimatedWaitStr(hold.EstimatedWaitDays),
 		})

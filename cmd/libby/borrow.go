@@ -2,8 +2,8 @@ package libby
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/cbguder/books/cards"
 	"github.com/cbguder/books/config"
 	"github.com/cbguder/books/overdrive"
 	"github.com/spf13/cobra"
@@ -43,21 +43,9 @@ func borrow(cmd *cobra.Command, args []string) error {
 }
 
 func getCard(libraryCode string) (*config.Card, error) {
-	cfg := config.Get()
-
-	if len(cfg.Cards) == 0 {
-		return nil, fmt.Errorf("no library cards stored")
-	}
-
 	if libraryCode == "" {
-		return &cfg.Cards[0], nil
+		return cards.GetDefault()
 	}
 
-	for _, card := range cfg.Cards {
-		if card.Library.Key == libraryCode {
-			return &card, nil
-		}
-	}
-
-	return nil, fmt.Errorf("no library card found for %s", libraryCode)
+	return cards.GetByLibrary(libraryCode)
 }
