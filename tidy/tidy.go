@@ -19,6 +19,7 @@ func Tidy(data []byte) ([]byte, error) {
 		"-q", "-asxml",
 		"--add-xml-decl", "yes",
 		"--quote-nbsp", "no",
+		"--tidy-mark", "no",
 		"--wrap", "0",
 	)
 
