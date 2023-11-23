@@ -7,29 +7,20 @@ import (
 
 type Openbook struct {
 	Title struct {
-		Main     string `json:"main"`
-		Subtitle string `json:"subtitle"`
+		Main string `json:"main"`
 	} `json:"title"`
 
 	Creator []struct {
 		Name string `json:"name"`
-		Role string `json:"role"`
-		Bio  string `json:"bio"`
 	} `json:"creator"`
-
-	Description struct {
-		Full  string `json:"full"`
-		Short string `json:"short"`
-	} `json:"description"`
 
 	Language string `json:"language"`
 
 	Nav struct {
 		Landmarks []struct {
-			Type      string `json:"type"`
-			Path      string `json:"path"`
-			Title     string `json:"title"`
-			MediaType string `json:"media-type"`
+			Type  string `json:"type"`
+			Path  string `json:"path"`
+			Title string `json:"title"`
 		} `json:"landmarks"`
 
 		Toc []TocItem `json:"toc"`
@@ -38,12 +29,9 @@ type Openbook struct {
 	RenditionFormat string `json:"rendition-format"`
 
 	Spine []struct {
-		Path               string  `json:"path"`
 		MediaType          string  `json:"media-type"`
 		Id                 string  `json:"id"`
-		Linear             bool    `json:"linear"`
 		AudioDuration      float64 `json:"audio-duration"`
-		AudioBitrate       int     `json:"audio-bitrate"`
 		OdreadOriginalPath string  `json:"-odread-original-path"`
 	} `json:"spine"`
 
