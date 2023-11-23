@@ -57,7 +57,7 @@ func (e *ebookRepackager) addGeneratedNav() error {
 		Properties: "nav",
 	}
 
-	return e.writer.AddFile("nav.html", buf, props)
+	return e.writer.AddFile("nav.xhtml", buf, props)
 }
 
 func mapNavItems(toc []overdrive.TocItem) []navItem {
