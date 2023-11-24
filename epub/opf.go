@@ -40,12 +40,9 @@ type Opf struct {
 		Opf string `xml:"xmlns:opf,attr"`
 		Dc  string `xml:"xmlns:dc,attr"`
 
-		Language  string `xml:"dc:language"`
-		Title     string `xml:"dc:title"`
-		Creator   string `xml:"dc:creator"`
-		Publisher string `xml:"dc:publisher,omitempty"`
-		Rights    string `xml:"dc:rights,omitempty"`
-		Subject   string `xml:"dc:subject,omitempty"`
+		Language string `xml:"dc:language"`
+		Title    string `xml:"dc:title"`
+		Creator  string `xml:"dc:creator"`
 
 		Identifier struct {
 			Text string `xml:",chardata"`
