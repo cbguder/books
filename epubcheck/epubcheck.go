@@ -37,14 +37,7 @@ type CheckResult struct {
 func Check(epubFile string) (*CheckResult, error) {
 	buf := bytes.NewBuffer(nil)
 
-	cmd := exec.Command(
-		"epubcheck",
-		"-q",
-		"--mode", "opf",
-		"-v", "3.0",
-		"--json", "-",
-		epubFile,
-	)
+	cmd := exec.Command("epubcheck", "-q", "--json", "-", epubFile)
 	cmd.Stdout = buf
 
 	err := cmd.Run()
