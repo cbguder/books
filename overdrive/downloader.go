@@ -156,7 +156,7 @@ func (d *Downloader) download(ctx context.Context, url string) (*http.Response, 
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
