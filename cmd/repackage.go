@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/cbguder/books/overdrive"
 	"github.com/cbguder/books/repackage"
-	"github.com/spf13/cobra"
 )
 
 var repackageCmd = &cobra.Command{
@@ -18,9 +19,11 @@ var repackageCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(repackageCmd)
+
+	repackageCmd.Flags().Bool("fallback-cover", false, "use fallback cover image")
 }
 
-func repackageE(_ *cobra.Command, args []string) error {
+func repackageE(cmd *cobra.Command, args []string) error {
 	srcDir := args[0]
 
 	openbookPath := filepath.Join(srcDir, "_d", "openbook.json")
@@ -33,7 +36,13 @@ func repackageE(_ *cobra.Command, args []string) error {
 	baseName := fmt.Sprintf("%s - %s", openbook.Creator[0].Name, openbook.Title.Main)
 
 	if openbook.RenditionFormat == "ebook" {
-		return repackage.Ebook(srcDir, baseName+".epub", openbook)
+		fallbackCover, _ := cmd.Flags().GetBool("fallback-cover")
+
+		opts := repackage.EbookOptions{
+			FallbackCover: fallbackCover,
+		}
+
+		return repackage.Ebook(srcDir, baseName+".epub", openbook, opts)
 	} else if openbook.RenditionFormat == "audiobook" {
 		return repackage.Audiobook(srcDir, baseName+".mp3", openbook)
 	}

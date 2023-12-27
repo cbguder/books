@@ -10,8 +10,16 @@ import (
 	"github.com/cbguder/books/overdrive"
 )
 
-func Ebook(srcDir, dstFile string, openbook *overdrive.Openbook) error {
-	repackager, err := newEbookRepackager(srcDir, dstFile, openbook)
+type EbookOptions struct {
+	FallbackCover bool
+}
+
+func Ebook(
+	srcDir, dstFile string,
+	openbook *overdrive.Openbook,
+	options EbookOptions,
+) error {
+	repackager, err := newEbookRepackager(srcDir, dstFile, openbook, options)
 	if err != nil {
 		return err
 	}
@@ -24,12 +32,17 @@ type ebookRepackager struct {
 	writer   *epub.Writer
 	srcDir   string
 	openbook *overdrive.Openbook
+	options  EbookOptions
 
 	addedNav   bool
 	addedFiles map[string]struct{}
 }
 
-func newEbookRepackager(srcDir, dstFile string, openbook *overdrive.Openbook) (*ebookRepackager, error) {
+func newEbookRepackager(
+	srcDir, dstFile string,
+	openbook *overdrive.Openbook,
+	options EbookOptions,
+) (*ebookRepackager, error) {
 	epubFile, err := os.Create(dstFile)
 	if err != nil {
 		return nil, err
@@ -45,6 +58,7 @@ func newEbookRepackager(srcDir, dstFile string, openbook *overdrive.Openbook) (*
 		writer:   writer,
 		srcDir:   srcDir,
 		openbook: openbook,
+		options:  options,
 
 		addedFiles: make(map[string]struct{}),
 	}, nil

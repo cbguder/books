@@ -79,6 +79,7 @@ func repackageEbook(t *testing.T, srcDir, dstFile string) {
 	openbook, err := overdrive.ReadOpenbook(openbookPath)
 	require.NoError(t, err)
 
-	err = repackage.Ebook(srcDir, dstFile, openbook)
+	opts := repackage.EbookOptions{}
+	err = repackage.Ebook(srcDir, dstFile, openbook, opts)
 	require.NoError(t, err)
 }

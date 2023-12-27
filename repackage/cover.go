@@ -7,15 +7,21 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cbguder/books/epub"
 	"golang.org/x/net/html"
+
+	"github.com/cbguder/books/epub"
 )
 
 func (e *ebookRepackager) addCoverImage() error {
-	// Try to extract cover image from cover doc
-	path, err := e.extractCoverImageFromCoverDoc()
-	if err != nil {
-		return err
+	var path string
+
+	if !e.options.FallbackCover {
+		// Try to extract cover image from cover doc
+		var err error
+		path, err = e.extractCoverImageFromCoverDoc()
+		if err != nil {
+			return err
+		}
 	}
 
 	if path == "" {
