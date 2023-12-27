@@ -1,0 +1,35 @@
+{
+  "title": {
+    "main": "My Special Book"
+  },
+  "creator": [
+    {
+      "name": "My Special Author"
+    }
+  ],
+  "language": "en",
+  "nav": {
+    "landmarks": [
+      {
+        "type": "cover",
+        "path": "cover.xhtml",
+        "title": "cover"
+      }
+    ],
+    "toc": [
+      {
+        "title": "Main",
+        "path": "main.xhtml"
+      }
+    ]
+  },
+  "rendition-format": "ebook",
+  "spine": [
+    {
+      "id": "Main",
+      "media-type": "application/xhtml+xml",
+      "-odread-original-path": "main.xhtml"
+    }
+  ],
+  "-odread-furbish-uri": "/_d/cover/buid/my-special-buid"
+}

@@ -13,7 +13,7 @@ import (
 )
 
 func TestEbook(t *testing.T) {
-	testSingleBook(t, "testdata/ebook")
+	testBooks(t, "testdata/books")
 }
 
 func TestEbookCorpus(t *testing.T) {

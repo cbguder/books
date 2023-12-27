@@ -15,6 +15,7 @@ import (
 const contentsRe = `parent\.__bif_cfc0\(self,'(.*)'\)`
 const bodyRe = `<body>.*</body>`
 const baseRe = `<base .*>`
+const roleRe = `role=".*?"`
 
 func (e *ebookRepackager) addHtmlFile(relPath string, props epub.FileProperties) error {
 	fullPath := filepath.Join(e.srcDir, relPath)
@@ -51,6 +52,9 @@ func processHtmlFile(data []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	re := regexp.MustCompile(roleRe)
+	decoded = re.ReplaceAllLiteral(decoded, nil)
 
 	tidied, err := tidy.Tidy(decoded)
 	if err != nil {

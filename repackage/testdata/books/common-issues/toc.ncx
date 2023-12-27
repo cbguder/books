@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+	<head>
+		<meta name="dtb:uid" content="my-special-uid" />
+	</head>
+	<docTitle>
+		<text>My Special Book</text>
+	</docTitle>
+	<docAuthor>
+		<text>My Special Author</text>
+	</docAuthor>
+	<navMap>
+		<navPoint id="navpoint1" playOrder="1"><navLabel><text>Main</text></navLabel><content src="main.xhtml" /></navPoint>
+	</navMap>
+</ncx>
