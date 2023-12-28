@@ -2,11 +2,11 @@ package libby
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/spf13/cobra"
 
 	"github.com/cbguder/books/config"
 	"github.com/cbguder/books/overdrive"
-	"github.com/spf13/cobra"
 )
 
 var syncCmd = &cobra.Command{
@@ -27,7 +27,6 @@ func syncE(_ *cobra.Command, _ []string) error {
 func sync(ctx context.Context) (*overdrive.SyncResponse, error) {
 	client := overdrive.NewClient()
 
-	fmt.Println("Syncing...")
 	resp, err := client.ChipSync(ctx)
 	if err != nil {
 		return nil, err

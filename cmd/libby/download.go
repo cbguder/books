@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cbguder/books/overdrive"
 	"github.com/spf13/cobra"
+
+	"github.com/cbguder/books/overdrive"
 )
 
 var downloadCmd = &cobra.Command{
@@ -30,7 +31,6 @@ func download(_ *cobra.Command, args []string) error {
 	client := overdrive.NewClient()
 	ctx := context.Background()
 
-	fmt.Println("Opening book...")
 	bookResp, err := client.OpenLoan(ctx, loan.CardId, mediaId, loan.Type.Id)
 	if err != nil {
 		return err

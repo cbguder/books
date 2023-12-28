@@ -56,7 +56,6 @@ Use "books [command] --help" for more information about a command.
 $ books libby auth
 Go to Menu > Settings > Copy To Another Device. You will see a setup code. Enter it below.
 Setup code: 12345678
-Syncing...
 Clone successful
 
 $ books libby search -f audiobook "Patrick Radden Keefe Say Nothing"
@@ -71,7 +70,6 @@ $ books libby search -f audiobook "Patrick Radden Keefe Say Nothing"
 $ books libby borrow 3984153
 
 $ books libby loans
-Syncing...
 ╭─────────┬──────────────────────┬─────────────┬───────────┬─────────┬───────────────┬────────────╮
 │ ID      │ Author               │ Title       │ Type      │ Library │ Checkout Date │ Due Date   │
 ├─────────┼──────────────────────┼─────────────┼───────────┼─────────┼───────────────┼────────────┤
@@ -79,12 +77,9 @@ Syncing...
 ╰─────────┴──────────────────────┴─────────────┴───────────┴─────────┴───────────────┴────────────╯
 
 $ books libby download 3984153
-Syncing...
-Opening audiobook...
 Downloading 17 files to "Patrick Radden Keefe - Say Nothing"...
 
 $ books libby return 3984153
-Syncing...
 
 $ books repackage "Patrick Radden Keefe - Say Nothing"
 ```

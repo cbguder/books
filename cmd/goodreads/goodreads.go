@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/cbguder/books/config"
 	"github.com/cbguder/books/goodreads"
-	"github.com/spf13/cobra"
 )
 
 var GoodreadsCmd = &cobra.Command{
@@ -37,8 +38,6 @@ func ensureAuth(cmd *cobra.Command, _ []string) error {
 }
 
 func goodreadsRefreshToken() error {
-	fmt.Println("Refreshing Goodreads access token...")
-
 	client := goodreads.NewClient()
 	resp, err := client.Token(context.Background())
 	if err != nil {
