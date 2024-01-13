@@ -7,9 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"golang.org/x/net/html"
-
 	"github.com/cbguder/books/epub"
+	"github.com/cbguder/books/soup"
 )
 
 func (e *ebookRepackager) addCoverImage() error {
@@ -69,6 +68,10 @@ func (e *ebookRepackager) extractCoverImageFromCoverDoc() (string, error) {
 		return "", err
 	}
 
+	if imagePathRelativeToCoverDoc == "" {
+		return "", nil
+	}
+
 	coverDir := filepath.Dir(fullPath)
 	absImagePath := filepath.Join(coverDir, imagePathRelativeToCoverDoc)
 	return filepath.Rel(e.srcDir, absImagePath)
@@ -76,25 +79,15 @@ func (e *ebookRepackager) extractCoverImageFromCoverDoc() (string, error) {
 
 func extractFirstImageSource(data []byte) (string, error) {
 	r := bytes.NewReader(data)
-	z := html.NewTokenizer(r)
-
-	for {
-		tt := z.Next()
-
-		if tt == html.ErrorToken {
-			return "", z.Err()
-		}
-
-		if tt == html.StartTagToken || tt == html.SelfClosingTagToken {
-			t := z.Token()
-
-			if t.Data == "img" {
-				for _, a := range t.Attr {
-					if a.Key == "src" {
-						return a.Val, nil
-					}
-				}
-			}
-		}
+	s, err := soup.Parse(r)
+	if err != nil {
+		return "", err
 	}
+
+	images := s.FindAll("img")
+	if len(images) == 0 {
+		return "", nil
+	}
+
+	return images[0].GetAttribute("src"), nil
 }
