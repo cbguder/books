@@ -2,7 +2,6 @@ package overdrive
 
 import (
 	"context"
-	"time"
 )
 
 type ChipResponse struct {
@@ -44,23 +43,23 @@ type Card struct {
 }
 
 type Loan struct {
-	CardId           string    `json:"cardId"`
-	CheckoutDate     time.Time `json:"checkoutDate"`
-	ExpireDate       time.Time `json:"expireDate"`
-	FirstCreatorName string    `json:"firstCreatorName"`
-	Id               string    `json:"id"`
-	Title            string    `json:"title"`
-	Type             MediaType `json:"type"`
+	CardId           string       `json:"cardId"`
+	CheckoutDate     FlexibleTime `json:"checkoutDate"`
+	ExpireDate       FlexibleTime `json:"expireDate"`
+	FirstCreatorName string       `json:"firstCreatorName"`
+	Id               string       `json:"id"`
+	Title            string       `json:"title"`
+	Type             MediaType    `json:"type"`
 }
 
 type Hold struct {
-	Id                string    `json:"id"`
-	CardId            string    `json:"cardId"`
-	EstimatedWaitDays int       `json:"estimatedWaitDays"`
-	FirstCreatorName  string    `json:"firstCreatorName"`
-	PlacedDate        time.Time `json:"placedDate"`
-	Title             string    `json:"title"`
-	Type              MediaType `json:"type"`
+	Id                string       `json:"id"`
+	CardId            string       `json:"cardId"`
+	EstimatedWaitDays int          `json:"estimatedWaitDays"`
+	FirstCreatorName  string       `json:"firstCreatorName"`
+	PlacedDate        FlexibleTime `json:"placedDate"`
+	Title             string       `json:"title"`
+	Type              MediaType    `json:"type"`
 }
 
 func (c *Client) Chip(ctx context.Context) (*ChipResponse, error) {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"time"
 )
 
 const audiobookFormats = "audiobook-overdrive,audiobook-overdrive-provisional"
@@ -36,10 +35,10 @@ type GetMediaResponse struct {
 	Title string    `json:"title"`
 	Type  MediaType `json:"type"`
 
-	EstimatedWaitDays int       `json:"estimatedWaitDays"`
-	FirstCreatorName  string    `json:"firstCreatorName"`
-	IsAvailable       bool      `json:"isAvailable"`
-	PublishDate       time.Time `json:"publishDate"`
+	EstimatedWaitDays int          `json:"estimatedWaitDays"`
+	FirstCreatorName  string       `json:"firstCreatorName"`
+	IsAvailable       bool         `json:"isAvailable"`
+	PublishDate       FlexibleTime `json:"publishDate"`
 
 	Languages []struct {
 		Name string `json:"name"`
