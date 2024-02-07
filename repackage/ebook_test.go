@@ -56,15 +56,9 @@ func testSingleBook(t *testing.T, srcDir string) {
 	result, err := epubcheck.Check(dstFile)
 	require.NoError(t, err)
 
-	c := result.Checker
-	if c.NFatal > 0 || c.NError > 0 || c.NWarning > 0 || c.NUsage > 0 {
+	if result.HasErrors() {
 		for _, msg := range result.Messages {
-			t.Logf(
-				"%s(%s): %s",
-				msg.Severity,
-				msg.ID,
-				msg.Message,
-			)
+			t.Log(msg)
 		}
 
 		t.FailNow()
